@@ -18,6 +18,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     var pointCount : Int = 0
     var lastTime: TimeInterval = TimeInterval()
     var deltaTime: TimeInterval = TimeInterval()
+    
     let themeSound = SKAction.playSoundFileNamed("theme.mp3", waitForCompletion: false)
     let crunchSound = SKAction.playSoundFileNamed("eatApple.wav", waitForCompletion: false)
     let loseSound = SKAction.playSoundFileNamed("lose.wav", waitForCompletion: false)
@@ -26,20 +27,21 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     
     override func didMove(to view: SKView) {
         let size = UIScreen.main.bounds.size
-        
+        backgroundColor = .white
         run(themeSound)
         player.name = "player"
-        backgroundColor = .white
-        🕹️.setNewPosition(withLocation: CGPoint(x: 0, y: -size.height/3))
-        addChild(🕹️)
-        addChild(🕹️.child)
-        🕹️.hiden()
+        
+        
         player.physicsBody = SKPhysicsBody(rectangleOf: player.frame.size)
         player.position = CGPoint(x: 0, y: 1300)
         player.xScale = 0.5
         player.yScale = 0.5
         addChild(player)
-    
+        🕹️.setNewPosition(withLocation: CGPoint(x: 0, y: -size.height/3))
+        addChild(🕹️)
+        addChild(🕹️.child)
+        🕹️.hiden()
+        
         let timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
             self.runCount += 1
             self.updateLabel(runCount: self.runCount)
@@ -54,8 +56,8 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         
         self.physicsWorld.contactDelegate = self
         self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
-        self.physicsBody = SKPhysicsBody(edgeLoopFrom: CGRect(x:        self.frame.minX,y:
-                                                                self.frame.minY,width: self.frame.size.width, height: self.frame.size.height))
+        self.physicsBody = SKPhysicsBody(edgeLoopFrom: CGRect(x:  self.frame.minX,
+                                                              y:  self.frame.minY,width: self.frame.size.width, height: self.frame.size.height))
         
         create_food()
         updatePoint()
@@ -120,7 +122,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         run(crunchSound)
         apples -= 1
     }
-
+    
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         player.physicsBody?.contactTestBitMask = player.physicsBody?.collisionBitMask ?? 0
@@ -165,7 +167,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             🕹️.hiden()
         }
     }
-
+    
     override func update(_ currentTime: CFTimeInterval) {
         
         deltaTime = currentTime - lastTime
@@ -176,7 +178,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         
         lastTime = currentTime
         checkCollisions()
-        if runCount >= 3 && !gameOver{
+        if runCount >= 40 && !gameOver{
             gameOver = true
             run(loseSound)
             let gameOverScene = GameOverScene(size: size, won: false)
@@ -189,7 +191,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             let gameOverScene = GameOverScene(size: size, won: true)
             let reveal = SKTransition.doorway(withDuration: 0.5)
             view?.presentScene(gameOverScene,transition: reveal)
-      
+            
         }
         
     }
